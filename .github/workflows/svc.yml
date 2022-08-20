@@ -390,16 +390,17 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
       #   run: npx semantic-release --branches ${{ inputs.mainBranch }}
 
-      - name: Semantic Release
-        uses: go-semantic-release/action@v1
-        with:
-          github-token: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
+      # - name: Semantic Release
+      #   uses: go-semantic-release/action@v1
+      #   with:
+      #     github-token: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
 
       - name: Next Version
         id: versioning
         run: |
           NEXT_VERSION=$(git for-each-ref --sort=authordate --format '%(refname)' refs/tags | tail -n 1 | sed -n -e 's/^.*refs\/tags\/v//p')
           echo "next version = $NEXT_VERSION"
+          NEXT_VERSION=0.0.0
           echo "::set-output name=version::$NEXT_VERSION"
 
 
