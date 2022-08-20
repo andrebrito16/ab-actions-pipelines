@@ -108,6 +108,7 @@ jobs:
   Static-Analysis:
     runs-on: ubuntu-latest
     if: needs.Setup.outputs.Event == 'push'
+    
     needs: Setup
 
     permissions:
@@ -1171,7 +1172,7 @@ jobs:
         if: steps.analysis.outputs.feature_has_configs
         run: |
           kubectl create configmap -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}} --from-env-file=${{steps.analysis.outputs.deploy_configs_file}} --dry-run=client --validate=false --output=yaml | kubectl apply -f -
-          kubectl create configmap -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}}-0.0.1 --from-env-file=${{steps.analysis.outputs.deploy_configs_file}} --dry-run=client --validate=false --output=yaml | kubectl apply -f -
+          kubectl create configmap -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}}-${{steps.versioning.outputs.version}} --from-env-file=${{steps.analysis.outputs.deploy_configs_file}} --dry-run=client --validate=false --output=yaml | kubectl apply -f -
           kubectl get configmap -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}} -o jsonpath='{.data}' | jq -r 'keys[]' |  tr '\n' '~' | sed 's/~/,/g;s/,$//' > ./manifests/k8s-configs-keys.txt
 
       # secrets
@@ -1188,7 +1189,7 @@ jobs:
         if: steps.analysis.outputs.feature_has_secrets
         run: |
           kubectl create secret generic -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}} --from-env-file=./manifests/k8s-secrets.env --dry-run=client --validate=false --output=yaml | kubectl apply -f -
-          kubectl create secret generic -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}}-0.0.1 --from-env-file=./manifests/k8s-secrets.env --dry-run=client --validate=false --output=yaml | kubectl apply -f -
+          kubectl create secret generic -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}}-${{steps.versioning.outputs.version}} --from-env-file=./manifests/k8s-secrets.env --dry-run=client --validate=false --output=yaml | kubectl apply -f -
           kubectl get secret -n ${{steps.analysis.outputs.deploy_namespace}} ${{steps.analysis.outputs.repository}} -o jsonpath='{.data}' | jq -r 'keys[]' |  tr '\n' '~' | sed 's/~/,/g;s/,$//' > ./manifests/k8s-secrets-keys.txt
 
       # secrets for registry auth
