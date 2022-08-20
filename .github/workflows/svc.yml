@@ -384,10 +384,15 @@ jobs:
       - name: Install dependencies
         run: yarn install
     
+      # - name: Semantic Release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
+      #   run: npx semantic-release --branches ${{ inputs.mainBranch }}
+      
       - name: Semantic Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
-        run: npx semantic-release --branches ${{ inputs.mainBranch }}
+      - uses: go-semantic-release/action@v1
+        with:
+          github-token: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
 
       - name: Next Version
         id: versioning
