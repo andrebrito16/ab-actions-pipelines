@@ -388,9 +388,9 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
       #   run: npx semantic-release --branches ${{ inputs.mainBranch }}
-      
+
       - name: Semantic Release
-      - uses: go-semantic-release/action@v1
+        uses: go-semantic-release/action@v1
         with:
           github-token: ${{ secrets.PIPELINE_DEPLOY_TOKEN }}
 
